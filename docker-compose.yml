@@ -1,0 +1,22 @@
+# docker-compose.yml
+version: '3'
+services:
+  # CLIENT
+  afro-app:
+    container_name: afro-client
+    restart: always
+    # env_file:
+      # - .env.local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # depends_on:
+    #   - server-dans-backend
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    volumes:
+      - .:/client
+    # links:
+      # - server-dans-backend
+    # entrypoint: /client/entrypoint.sh
