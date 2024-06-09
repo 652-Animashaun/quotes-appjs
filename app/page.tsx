@@ -1,9 +1,10 @@
 import Search from './ui/search'
-import QuoteCardList, InfiniteScroll from './ui/QuoteCardList'
+import QuoteCardList from './ui/QuoteCardList'
 import { getQuotes } from './actions/fetchQuotes'
 // import QuotesPage from './frontpage/page';
 import { QuoteListSkeleton } from '@/app/ui/skeletons'
 import { Suspense } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 export default async function Page({
   searchParams,
@@ -22,11 +23,10 @@ export default async function Page({
     <main>
       <Search />
       {/*<QuoteListSkeleton/>*/}
+
       <Suspense key={data.quotes} fallback={<QuoteListSkeleton />}>
         <QuoteCardList quotes={data.quotes} />
       </Suspense>
     </main>
   )
 }
-
-

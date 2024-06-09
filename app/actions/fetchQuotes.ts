@@ -11,9 +11,14 @@ async function getData({ url }) {
   return res.json()
 }
 
+export const getLengthofQuotes = (data) => {
+  return data.length
+}
+
 export const getQuotes = (query = '', currentPage = 1, limit = 10) => {
   const urlString = `http://127.0.0.1:5000?q=${query}&page=${currentPage}&limit=${limit}`
   const url = new URL(urlString) // Create a new URL object
-
-  return getData({ url })
+  const response = getData({ url })
+  getLengthofQuotes(response)
+  return response
 }
