@@ -1,66 +1,64 @@
-import Search from './ui/search';
-import QuoteCardList from './ui/QuoteCardList';
-import {getQuotes} from './actions/fetchQuotes';
-// import QuotesPage from './frontpage/page';
-import {QuoteListSkeleton} from '@/app/ui/skeletons';
-import { Suspense } from 'react';
-import Pagination from './ui/pagination';
-import InfiniteScroll from 'react-infinite-scroll-component'
+"use client";
 
+import { useState, useEffect } from "react";
+import Search from "./ui/search";
+import { QuoteListSkeleton } from "@/app/ui/skeletons";
+import InfiniteScrollCmp from './ui/InfiniteScrollWithHeight';
+import { getQuotes } from "./actions/fetchQuotes";
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
- 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
-    q?: string;
-    page?: string;
+export default function Page({ searchParams }) {
+  const [quotes, setQuotes] = useState([]);
+  const [currentPage, setCurrentPage] = useState(Number(searchParams?.page) || 1);
+  const [hasMore, setHasMore] = useState(true);
+  const [query, setQuery] = useState(searchParams?.q || "");
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchInitialQuotes = async () => {
+      setLoading(true);
+      try {
+        const data = await getQuotes(query, currentPage);
+        setQuotes(data.quotes);
+        setHasMore(data.links.next != null);
+      } catch (error) {
+        console.error("Error fetching initial quotes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialQuotes();
+  }, [query, currentPage]);
+
+  const fetchQuotes = async (direction: 'next' | 'prev') => {
+    try {
+      const nextPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
+      console.log("direction: ", nextPage)
+      const data = await getQuotes(query, nextPage);
+      setQuotes((prevQuotes) => direction === 'next' ? [...prevQuotes, ...data.quotes] : [...data.quotes, ...prevQuotes]);
+      setCurrentPage(nextPage);
+      setHasMore(data.links.next != null);
+      router.replace(`${pathname}?q=${query}&page=${nextPage}`);
+    } catch (error) {
+      console.error(`Error fetching ${direction} quotes:`, error);
+    }
   };
-}) {
 
-
-  const query = searchParams?.q || '';
-  // console.log('QueryTerms?', query)
-  const currentPage = Number(searchParams?.page) || 1;
-  const data = await getQuotes(query, currentPage)
-  console.log(data)
-  console.log(data.total_pages)
-  console.log(data.links.next)
-  
   return (
-          <main>
-            <Search />
-            {/*<QuoteListSkeleton/>*/}
-          {/*  <Suspense key={data.quotes} fallback={<QuoteListSkeleton />}>
-              
-            </Suspense>*/}
-            {/*<QuoteCardList quotes={data.quotes}/>*/}
-
-            <InfiniteScroll
-                dataLength={data.total_pages} //This is important field to render the next data
-                next={data.links.next}
-                hasMore={true}
-                loader={<h4>Loading...</h4>}
-                endMessage={
-                  <p style={{ textAlign: 'center' }}>
-                    <b>Yay! You have seen it all</b>
-                  </p>
-                }
-                // below props only if you need pull down functionality
-                // refreshFunction={this.refresh}
-                // pullDownToRefresh
-                // pullDownToRefreshThreshold={50}
-                // pullDownToRefreshContent={
-                //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-                // }
-                // releaseToRefreshContent={
-                //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-                // }
-              >
-                <QuoteCardList quotes={data.quotes}/>
-            </InfiniteScroll>
-
-          </main>
-          )
-        
+    <main>
+      <Search setQuery={setQuery} />
+      {loading ? (
+        <QuoteListSkeleton />
+      ) : (
+        <InfiniteScrollCmp
+          quotes={quotes}
+          fetchQuotes={fetchQuotes}
+          hasMore={hasMore}
+        />
+      )}
+    </main>
+  );
 }
