@@ -6,7 +6,7 @@ import {
   PencilSquareIcon,
   GiftIcon,
   StarIcon,
-} from '@heroicons/react/24/outline' // Importing icons from Heroicons v2
+} from '@heroicons/react/24/outline'
 
 type User = {
   name: string
@@ -26,7 +26,7 @@ type StatCardProps = {
   value: number
   label: string
   color: string
-  icon: JSX.Element // Adding icon prop to the StatCard component
+  icon: JSX.Element
 }
 
 type AnnotationsFeedProps = {
@@ -66,7 +66,7 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
 
 const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
   return (
-    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-80 shadow-lg h-full">
+    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full sm:w-80 shadow-lg h-full">
       <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
         <img
           src={user.profileImage}
@@ -110,7 +110,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
 
 const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
   return (
-    <div className="w-80 border-4 border-black-500 p-6 rounded-lg h-full">
+    <div className="w-full sm:w-80 border-4 border-black-500 p-6 rounded-lg h-full mt-4 sm:mt-0">
       <h3 className="text-lg font-bold text-black mb-4">Recent Annotations</h3>
       {annotations.map((annotation, index) => (
         <div
@@ -126,11 +126,9 @@ const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
 
 const ProfilePage: React.FC = () => {
   return (
-    <div className="flex items-start justify-center mt-12 min-h-screen p-4 bg-white">
-      <div className="flex items-stretch space-x-8">
-        <UserBioCard user={user} />
-        <AnnotationsFeed annotations={annotations} />
-      </div>
+    <div className="flex flex-col items-center sm:flex-row sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
+      <UserBioCard user={user} />
+      <AnnotationsFeed annotations={annotations} />
     </div>
   )
 }
