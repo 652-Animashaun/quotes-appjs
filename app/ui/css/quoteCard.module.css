@@ -1,0 +1,41 @@
+/* QuoteCard.module.css */
+.card {
+  padding: 2rem;
+  border: 0;
+}
+
+.textLg {
+  font-size: 1.125rem; /* Equivalent to text-lg */
+}
+
+.text3xl {
+  font-size: 1.875rem; /* Equivalent to text-3xl */
+  color: var(--tremor-content-strong);
+}
+
+.textDark {
+  color: var(--dark-tremor-content-strong);
+}
+
+.textRight {
+  text-align: right;
+}
+
+.hoverBgGreen {
+  transition: background-color 0.3s ease;
+}
+
+.hoverBgGreen:hover {
+  background-color: green;
+}
+
+.hoverBgGreen:active {
+  background-color: green;
+}
+
+.details {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
