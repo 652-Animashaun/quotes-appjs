@@ -1,5 +1,6 @@
 "use client";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './globals.css'; // Assuming you have a Tailwind CSS setup
 import { useState, useEffect } from "react";
 import Search from "./ui/search";
 import { QuoteListSkeleton } from "@/app/ui/skeletons";
