@@ -1,12 +1,15 @@
-// User-profile/page.tsx
+'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   UserIcon,
   PencilSquareIcon,
   GiftIcon,
   StarIcon,
+  CameraIcon,
 } from '@heroicons/react/24/outline'
+import { EditText } from 'react-edit-text'
+import 'react-edit-text/dist/index.css'
 
 type User = {
   name: string
@@ -49,7 +52,9 @@ const annotations: string[] = [
   'Annotation 3',
   'Annotation 4',
   'Annotation 5',
-  // Add more annotations as needed
+  'Annotation 6',
+  'Annotation 7',
+  'Annotation 8',
 ]
 
 const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
@@ -65,18 +70,63 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
 }
 
 const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [bio, setBio] = useState(user.bio)
+
+  const toggleEditing = () => {
+    setIsEditing(!isEditing)
+  }
+
+  const handleBioChange = (value: string) => {
+    setBio(value)
+  }
+
   return (
-    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full sm:w-80 shadow-lg h-full">
-      <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
+    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full sm:w-80 shadow-lg h-full relative">
+      <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
         <img
           src={user.profileImage}
           alt="Profile"
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="text-center mt-4">
+      {/* Positioning the CameraIcon relative to the profile image container */}
+      <CameraIcon
+          className="absolute bottom-50 left-full transform -translate-x-[120px] translate-y-20 h-8 w-8 text-gray-600 cursor-pointer"
+          onClick={() => alert('Upload new profile picture')}
+        />
+
+      <div className="text-center mt-8">
         <h2 className="text-xl font-bold text-black">{user.name}</h2>
-        <p className="mt-2 text-black-200">{user.bio}</p>
+        <div className="flex flex-col items-center justify-center mt-2 w-full">
+          <EditText
+            name="bio"
+            value={bio}
+            onChange={(e) => handleBioChange(e.value as string)}
+            showEditButton={false}
+            editButtonProps={{
+              style: { display: 'none' },
+            }}
+            editing={isEditing}
+            style={{
+              width: '100%',
+              maxWidth: '100%',
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              padding: '8px',
+              borderRadius: '4px',
+              border: isEditing ? '1px solid #ccc' : 'none',
+              backgroundColor: isEditing ? '#f9f9f9' : 'transparent',
+            }}
+            className="w-full"
+          />
+          <button
+  className="mt-2 px-4 py-1 border border-gray-400 rounded-full text-blue-700 bg-transparent hover:bg-blue-100 transition duration-150 ml-40"
+  onClick={toggleEditing}
+>
+  {isEditing ? 'Save Bio' : 'Edit Bio'}
+</button>
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <StatCard
@@ -110,8 +160,8 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
 
 const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
   return (
-    <div className="w-full sm:w-80 border-4 border-black-500 p-6 rounded-lg h-full mt-4 sm:mt-0">
-      <h3 className="text-lg font-bold text-black mb-4">Recent Annotations</h3>
+    <div className="w-full sm:w-auto flex-1 border-4 border-black-500 p-6 rounded-lg h-full mt-4 sm:mt-0 sm:ml-4">
+      <h3 className="text-lg font-bold text-black mb-4">Recent Annotations Feeds</h3>
       {annotations.map((annotation, index) => (
         <div
           key={index}
@@ -126,7 +176,7 @@ const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
 
 const ProfilePage: React.FC = () => {
   return (
-    <div className="flex flex-col items-center sm:flex-row sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
+    <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
       <UserBioCard user={user} />
       <AnnotationsFeed annotations={annotations} />
     </div>
