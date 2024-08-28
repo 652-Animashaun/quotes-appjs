@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   UserIcon,
   PencilSquareIcon,
@@ -8,7 +8,6 @@ import {
   StarIcon,
   CameraIcon,
 } from '@heroicons/react/24/outline'
-import { EditText } from 'react-edit-text'
 import 'react-edit-text/dist/index.css'
 
 type User = {
@@ -72,14 +71,22 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
 const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [bio, setBio] = useState(user.bio)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const toggleEditing = () => {
     setIsEditing(!isEditing)
   }
 
-  const handleBioChange = (value: string) => {
-    setBio(value)
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setBio(e.target.value)
   }
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto' // Reset the height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Set it to the scroll height
+    }
+  }, [bio])
 
   return (
     <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full sm:w-80 shadow-lg h-full relative">
@@ -90,42 +97,38 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
           className="object-cover w-full h-full"
         />
       </div>
-      {/* Positioning the CameraIcon relative to the profile image container */}
       <CameraIcon
-          className="absolute bottom-50 left-full transform -translate-x-[120px] translate-y-20 h-8 w-8 text-gray-600 cursor-pointer"
-          onClick={() => alert('Upload new profile picture')}
-        />
+        className="absolute bottom-50 left-full transform -translate-x-[120px] translate-y-20 h-8 w-8 text-gray-600 cursor-pointer"
+        onClick={() => alert('Upload new profile picture')}
+      />
 
       <div className="text-center mt-8">
         <h2 className="text-xl font-bold text-black">{user.name}</h2>
         <div className="flex flex-col items-center justify-center mt-2 w-full">
-          <EditText
-            name="bio"
-            value={bio}
-            onChange={(e) => handleBioChange(e.value as string)}
-            showEditButton={false}
-            editButtonProps={{
-              style: { display: 'none' },
-            }}
-            editing={isEditing}
-            style={{
-              width: '100%',
-              maxWidth: '100%',
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word',
-              padding: '8px',
-              borderRadius: '4px',
-              border: isEditing ? '1px solid #ccc' : 'none',
-              backgroundColor: isEditing ? '#f9f9f9' : 'transparent',
-            }}
-            className="w-full"
-          />
+          {isEditing ? (
+            <div className="w-full">
+              <textarea
+                ref={textareaRef}
+                value={bio}
+                onChange={handleBioChange}
+                className="w-full p-2 border border-gray-300 rounded-lg resize-none overflow-auto"
+                maxLength={256}
+                placeholder="Edit your bio..."
+                rows={1} // Start with 1 row, will expand automatically
+              />
+              <div className="text-right text-sm text-gray-600">
+                {bio.length}/256
+              </div>
+            </div>
+          ) : (
+            <p className="whitespace-pre-wrap w-full">{bio}</p>
+          )}
           <button
-  className="mt-2 px-4 py-1 border border-gray-400 rounded-full text-blue-700 bg-transparent hover:bg-blue-100 transition duration-150 ml-40"
-  onClick={toggleEditing}
->
-  {isEditing ? 'Save Bio' : 'Edit Bio'}
-</button>
+            className="mt-2 px-4 py-1 border border-gray-400 rounded-full text-blue-700 bg-transparent hover:bg-blue-100 transition duration-150"
+            onClick={toggleEditing}
+          >
+            {isEditing ? 'Save Bio' : 'Edit Bio'}
+          </button>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
