@@ -25,7 +25,6 @@ export const authOptions = {
 
         });
         const user = await res.json();
-        console.log("USER", user)
         if (res.ok && user) {
           return user;
         } else {
@@ -46,7 +45,6 @@ export const authOptions = {
         token.id = user.user.id;
         token.email = user.user.email;
         token.bearerToken = user.token
-        console.log("routeTOKEN", token)
       }
       return token;
     },

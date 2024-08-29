@@ -177,11 +177,13 @@ const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
   )
 }
 
-const ProfilePage: React.FC = () => {
+const ProfilePage: React.FC = ({userdata}) => {
+  console.log("userdata", userdata)
+
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
-      <UserBioCard user={user} />
-      <AnnotationsFeed annotations={annotations} />
+      <UserBioCard user={userdata} />
+      <AnnotationsFeed annotations={userdata.annotations} />
     </div>
   )
 }
