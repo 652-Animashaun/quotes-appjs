@@ -31,7 +31,6 @@ export const userProfile = async () => {
 	}
 	catch (error){
 		console.error("Error fetching user session")
-		redirect('/login')
 	}
 
 }
