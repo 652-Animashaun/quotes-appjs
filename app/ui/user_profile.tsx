@@ -69,34 +69,34 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
 }
 
 const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
-  console.log("UserBioCard")
-  const [isEditing, setIsEditing] = useState(false)
-  const [bio, setBio] = useState(user.bio ? JSON.stringify(user.bio) : "UserBio Placeholder...")
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [isEditing, setIsEditing] = useState(false);
+  const [bio, setBio] = useState(user.bio || "UserBio Placeholder...");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const toggleEditing = () => {
-    setIsEditing(!isEditing)
-  }
+    setIsEditing(!isEditing);
+  };
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setBio(e.target.value)
-  }
+    setBio(e.target.value);
+  };
+
+  useEffect(() => {
+    setBio(user.bio || "UserBio Placeholder...");
+  }, [user.bio]);
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto' // Reset the height
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px` // Set it to the scroll height
+      textareaRef.current.style.height = 'auto'; // Reset the height
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set it to the scroll height
     }
-  }, [bio])
+  }, [bio]);
 
-  return (
-    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full sm:w-80 shadow-lg h-full relative">
-    <div>
-      <h3> USER PROFILE </h3>
-    </div>
+  return(
+    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full shadow-lg h-full relative">
       <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
         <img
-          src={user.profileImage}
+          src={user.profileImage || '/default-profile.jpg'}
           alt="Profile"
           className="object-cover w-full h-full"
         />
@@ -107,7 +107,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
       />
 
       <div className="text-center mt-8">
-        <h2 className="text-xl font-bold text-black">{user.username}</h2>
+        <h2 className="text-xl font-bold text-black">{user.username || "Unknown User"}</h2>
         <div className="flex flex-col items-center justify-center mt-2 w-full">
           {isEditing ? (
             <div className="w-full">
@@ -118,7 +118,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
                 className="w-full p-2 border border-gray-300 rounded-lg resize-none overflow-auto"
                 maxLength={256}
                 placeholder="Edit your bio..."
-                rows={1} // Start with 1 row, will expand automatically
+                rows={1}
               />
               <div className="text-right text-sm text-gray-600">
                 {bio.length}/256
@@ -143,7 +143,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
           icon={<UserIcon className="h-6 w-6 text-blue-500" />}
         />
         <StatCard
-          value={JSON.stringify(user.annotations.length)}
+          value={user.annotations.length}
           label="Annotations"
           color="text-green-500"
           icon={<PencilSquareIcon className="h-6 w-6 text-green-500" />}
@@ -162,8 +162,9 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
         />
       </div>
     </div>
-  )
-}
+    )
+};
+
 
 const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
   return (
@@ -187,10 +188,14 @@ const ProfilePage: React.FC<{userdata: User}> = ({userdata}) => {
   console.log(slicedArray)
 
   return (
-    <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
-      <UserBioCard user={userdata} />
-      <AnnotationsFeed annotations={slicedArray} />
-    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-12 mt-12 min-h-screen bg-white">
+  <div className="sm:col-span-4">
+    <UserBioCard user={userdata} />
+  </div>
+  <div className="sm:col-span-8">
+    <AnnotationsFeed annotations={slicedArray} />
+  </div>
+</div>
   )
 }
 
