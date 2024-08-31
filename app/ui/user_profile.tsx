@@ -69,8 +69,9 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
 }
 
 const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
+  console.log("UserBioCard")
   const [isEditing, setIsEditing] = useState(false)
-  const [bio, setBio] = useState(user.bio)
+  const [bio, setBio] = useState(user.bio ? JSON.stringify(user.bio) : "UserBio Placeholder...")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const toggleEditing = () => {
@@ -90,6 +91,9 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
 
   return (
     <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full sm:w-80 shadow-lg h-full relative">
+    <div>
+      <h3> USER PROFILE </h3>
+    </div>
       <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
         <img
           src={user.profileImage}
@@ -139,7 +143,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
           icon={<UserIcon className="h-6 w-6 text-blue-500" />}
         />
         <StatCard
-          value={JSON.stringify(user.annotations)}
+          value={JSON.stringify(user.annotations.length)}
           label="Annotations"
           color="text-green-500"
           icon={<PencilSquareIcon className="h-6 w-6 text-green-500" />}
@@ -178,13 +182,14 @@ const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
 }
 
 const ProfilePage: React.FC<{userdata: User}> = ({userdata}) => {
-  const user = JSON.stringify(userdata)
-  console.log(userdata.annotations)
+  // const user = JSON.stringify(userdata)
+  const slicedArray = userdata.annotations.slice(0,5)
+  console.log(slicedArray)
 
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
       <UserBioCard user={userdata} />
-      <AnnotationsFeed annotations={userdata.annotations} />
+      <AnnotationsFeed annotations={slicedArray} />
     </div>
   )
 }
