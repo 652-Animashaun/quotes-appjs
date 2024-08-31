@@ -50,7 +50,7 @@ export const authOptions = {
     },
     async session({ session, token }) {
       session.user = token;
-      console.log("SESSION", session)
+      console.log("ASYNC SESSION")
       await setSessionCookie(session)
       return session;
     },

@@ -11,7 +11,7 @@ export async function setSessionCookie(session){
 	path:'/',
 	SameSite: 'lax',
 		}) 
-	// console.log('SESSION SET ON CLIENT', session);
+	console.log('SESSION USER ID', session.user.id);
 	
 	return
 }

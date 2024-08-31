@@ -35,26 +35,26 @@ type AnnotationsFeedProps = {
   annotations: string[]
 }
 
-const user: User = {
-  name: 'Marcus James',
-  bio: 'Software Engineer at lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  profileImage: '/profile1.jpg',
-  followers: 1200,
-  annotations: 300,
-  contributions: 150,
-  quotesIQ: 45,
-}
+// const user: User = {
+//   name: 'Marcus James',
+//   bio: 'Software Engineer at lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+//   profileImage: '/profile1.jpg',
+//   followers: 1200,
+//   annotations: 300,
+//   contributions: 150,
+//   quotesIQ: 45,
+// }
 
-const annotations: string[] = [
-  'Annotation 1',
-  'Annotation 2',
-  'Annotation 3',
-  'Annotation 4',
-  'Annotation 5',
-  'Annotation 6',
-  'Annotation 7',
-  'Annotation 8',
-]
+// const annotations: string[] = [
+//   'Annotation 1',
+//   'Annotation 2',
+//   'Annotation 3',
+//   'Annotation 4',
+//   'Annotation 5',
+//   'Annotation 6',
+//   'Annotation 7',
+//   'Annotation 8',
+// ]
 
 const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
   return (
@@ -103,7 +103,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
       />
 
       <div className="text-center mt-8">
-        <h2 className="text-xl font-bold text-black">{user.name}</h2>
+        <h2 className="text-xl font-bold text-black">{user.username}</h2>
         <div className="flex flex-col items-center justify-center mt-2 w-full">
           {isEditing ? (
             <div className="w-full">
@@ -139,7 +139,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
           icon={<UserIcon className="h-6 w-6 text-blue-500" />}
         />
         <StatCard
-          value={user.annotations}
+          value={JSON.stringify(user.annotations)}
           label="Annotations"
           color="text-green-500"
           icon={<PencilSquareIcon className="h-6 w-6 text-green-500" />}
@@ -170,15 +170,16 @@ const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
           key={index}
           className="border-b-2 border-blue-500 py-3 hover:bg-gray-200 transition duration-150 rounded-lg"
         >
-          <p className="text-black">{annotation}</p>
+          <p className="text-black">{JSON.stringify(annotation)}</p>
         </div>
       ))}
     </div>
   )
 }
 
-const ProfilePage: React.FC = ({userdata}) => {
-  console.log("userdata", userdata)
+const ProfilePage: React.FC<{userdata: User}> = ({userdata}) => {
+  const user = JSON.stringify(userdata)
+  console.log(userdata.annotations)
 
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center mt-12 min-h-screen p-4 bg-white">
