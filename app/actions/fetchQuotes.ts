@@ -2,13 +2,13 @@
 import { cookies } from 'next/headers';
 
 async function getData(url) {
-  const sessionCookie = JSON.parse(cookies().get('session').value);
+  // const sessionCookie = JSON.parse(cookies().get('session')?.value);
 
 
   
-  if (!sessionCookie) {
-    throw new Error('Session cookie not found');
-  }
+  // if (!sessionCookie) {
+  //   throw new Error('Session cookie not found');
+  // }
   
   // console.log("COOKIE_SESS", sessionCookie.user["bearerToken"])
   // console.log("URL>>>>", url)
@@ -24,7 +24,7 @@ async function getData(url) {
   });
 
   if (!res.ok) {
-    console.log("!!!!COOKIE_SESS", sessionCookie)
+    // console.log("!!!!COOKIE_SESS", sessionCookie)
     throw new Error('Failed to fetch data');
 
   }

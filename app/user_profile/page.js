@@ -3,9 +3,11 @@
 import ProfilePage from '../ui/user_profile';
 import userProfile from '../actions/userProfile';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [userData, setUserData] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const getProfile = async () => {
@@ -13,19 +15,24 @@ export default function Page() {
       try {
         const user = await userProfile();
         if (user) {
-          setUserData(user);
-          console.log("USER FETCHED", user.id, user.bio);
+          setUserData(user)
         }
       } catch (error) {
-        console.error("USER DATA PAGE FETCH ERROR", error);
+        if (error.message === "REDIRECT_TO_LOGIN"){
+          router.push('/login');
+        } else {
+          console.error("Error in fetching data:", error);
+        }
       }
+
     };
 
     getProfile(); // Call the function to fetch the profile
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, [router]); // Empty dependency array ensures this effect runs only once on mount
 
   // Conditional rendering: Render loading state or the ProfilePage
   return (
+    // <ProfilePage userdata={userData} />
     <>
       {userData ? (
         <ProfilePage userdata={userData} />
