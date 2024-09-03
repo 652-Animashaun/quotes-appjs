@@ -68,14 +68,22 @@ const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
   )
 }
 
-const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
+const UserBioCard: React.FC<UserBioCardProps> = ({ user, updateBio }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState(user.bio || "UserBio Placeholder...");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+
   const toggleEditing = () => {
     setIsEditing(!isEditing);
   };
+
+  const handleBioUpdate = async () => {
+    await updateBio(bio)
+    toggleEditing()
+    
+
+  }
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);
@@ -96,7 +104,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
     <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full shadow-lg h-full relative">
       <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
         <img
-          src={user.profileImage || '/default-profile.jpg'}
+          src={user.profile_image || '/default-profile.jpg'}
           alt="Profile"
           className="object-cover w-full h-full"
         />
@@ -107,7 +115,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
       />
 
       <div className="text-center mt-8">
-        <h2 className="text-xl font-bold text-black">{user.username || "Unknown User"}</h2>
+        <h2 className="text-xl font-bold text-black">{user.email || "Unknown User"}</h2>
         <div className="flex flex-col items-center justify-center mt-2 w-full">
           {isEditing ? (
             <div className="w-full">
@@ -129,9 +137,9 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user }) => {
           )}
           <button
             className="mt-2 px-4 py-1 border border-gray-400 rounded-full text-blue-700 bg-transparent hover:bg-blue-100 transition duration-150"
-            onClick={toggleEditing}
+            onClick={isEditing ? handleBioUpdate : toggleEditing}
           >
-            {isEditing ? 'Save Bio' : 'Edit Bio'}
+            {isEditing ? "Save Bio" : "Edit Bio"}
           </button>
         </div>
       </div>
@@ -182,15 +190,16 @@ const AnnotationsFeed: React.FC<AnnotationsFeedProps> = ({ annotations }) => {
   )
 }
 
-const ProfilePage: React.FC<{userdata: User}> = ({userdata}) => {
+const ProfilePage: React.FC<{userdata: User}> = ({userdata, updateBio}) => {
   // const user = JSON.stringify(userdata)
   const slicedArray = userdata.annotations.slice(0,5)
-  console.log(slicedArray)
+  console.log(userdata)
+  console.log("annotation_iq", userdata.annotation_iq)
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-12 mt-12 min-h-screen bg-white">
   <div className="sm:col-span-4">
-    <UserBioCard user={userdata} />
+    <UserBioCard user={userdata} updateBio={updateBio} />
   </div>
   <div className="sm:col-span-8">
     <AnnotationsFeed annotations={slicedArray} />

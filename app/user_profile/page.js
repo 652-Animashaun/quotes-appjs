@@ -1,13 +1,20 @@
 "use client"
 
 import ProfilePage from '../ui/user_profile';
-import userProfile from '../actions/userProfile';
+import userProfile, { updateUserProfile } from '../actions/userProfile';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [userData, setUserData] = useState(null);
   const router = useRouter();
+
+  const handleBioUpdate = async (bio) => {
+    console.log("bioUpdate", bio)
+    await updateUserProfile(bio, "bio")
+  }
+
+
 
   useEffect(() => {
     const getProfile = async () => {
@@ -35,7 +42,7 @@ export default function Page() {
     // <ProfilePage userdata={userData} />
     <>
       {userData ? (
-        <ProfilePage userdata={userData} />
+        <ProfilePage userdata={userData} updateBio={handleBioUpdate} />
       ) : (
         <div>Loading...</div>
       )}
