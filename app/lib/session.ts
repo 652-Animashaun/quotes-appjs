@@ -15,3 +15,7 @@ export async function setSessionCookie(session){
 	
 	return
 }
+
+export const getCookies = () => {
+	return cookies().get('session')?.value;
+}

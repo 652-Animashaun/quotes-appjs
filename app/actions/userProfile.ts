@@ -1,61 +1,17 @@
 // // USER PROFILE ACTIONS
 "use server"
-// import { cookies } from 'next/headers';
-// import { redirect } from 'next/navigation';
-
-// export const userProfile = async () => {
-//     console.log("called actions/userProfile");
-//     try {
-//         const sessionCookie = cookies().get('session')?.value;
-
-//         if (sessionCookie) {
-//             const parsedSession = JSON.parse(sessionCookie);
-//             if (parsedSession && parsedSession.user && parsedSession.user.bearerToken) {
-//                 const url = process.env.SERVERURL;
-
-//                 const res = await fetch(`${url}/user`, {
-//                     method: "GET",
-//                     headers: {
-//                         "Authorization": `Bearer ${parsedSession.user.bearerToken}`,
-//                         "Content-Type": "application/json",
-//                     },
-//                     cache: "no-cache",
-//                 });
-
-//                 if (!res.ok) {
-//                     throw new Error(`Error fetching user data: ${res.statusText}`);
-//                 }
-
-//                 const jsonres = await res.json();
-//                 return jsonres;
-//             } else {
-//             	redirect('/login');
-//                 // console.error("Invalid session structure");
-                
-//             }
-//         } else {
-//             // console.error("Session cookie not found");
-//             redirect('/login');
-//         }
-//     } catch (error) {
-//         console.error("Error fetching user session:", error);
-//         return null;  // Return null or an appropriate value to indicate failure
-//     }
-// }
-
-// export default userProfile;
-
-
-
 
 import { useRouter } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { getCookies } from '../lib/session';
 
-const sessionCookie = cookies().get('session')?.value;
+
 const url = process.env.SERVERURL;
 
 export const updateUserProfile = async (data, updatetype) => {
     console.log("called updateUserProfile!", data, updatetype)
+    const sessionCookie = getCookies()
+    console.log("called updateUserProfile!", sessionCookie)
     if (sessionCookie) {
         const parsedSession = JSON.parse(sessionCookie);
         if (parsedSession && parsedSession.user && parsedSession.user.bearerToken) {
@@ -67,7 +23,7 @@ export const updateUserProfile = async (data, updatetype) => {
                     "Content-Type": "application/json",
                 },
                 cache: "no-cache",
-                body: {"user_id":`${parsedSession.user.id}`, "editedbio":`${JSON.stringify(data)}`}
+                body: JSON.stringify({"user_id":`${parsedSession.user.id}`, "editedbio":`${data}`})
             });
 
             if (!res.ok) {
@@ -85,11 +41,11 @@ export const updateUserProfile = async (data, updatetype) => {
     }
 
 
-
 }
 
 export const userProfile = async () => {
     console.log("called actions/userProfile");
+    const sessionCookie = getCookies()
     try {
         if (sessionCookie) {
             const parsedSession = JSON.parse(sessionCookie);
