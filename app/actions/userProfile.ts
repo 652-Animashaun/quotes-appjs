@@ -8,22 +8,22 @@ import { getCookies } from '../lib/session';
 
 const url = process.env.SERVERURL;
 
-export const updateUserProfile = async (data, updatetype) => {
-    console.log("called updateUserProfile!", data, updatetype)
+export const updateUserProfile = async (data, action) => {
+    console.log("called updateUserProfile!", data, action)
+    // const updateaction = JSON.stringify(action)
     const sessionCookie = getCookies()
-    console.log("called updateUserProfile!", sessionCookie)
     if (sessionCookie) {
         const parsedSession = JSON.parse(sessionCookie);
         if (parsedSession && parsedSession.user && parsedSession.user.bearerToken) {
-
-            const res = await fetch(`${url}/user?update=${updatetype}`, {
+            const payload = JSON.stringify({"user_id":`${parsedSession.user.id}`, [action]:data})
+            const res = await fetch(`${url}/user?update=${action}`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${parsedSession.user.bearerToken}`,
                     "Content-Type": "application/json",
                 },
                 cache: "no-cache",
-                body: JSON.stringify({"user_id":`${parsedSession.user.id}`, "editedbio":`${data}`})
+                body: payload
             });
 
             if (!res.ok) {
@@ -37,7 +37,7 @@ export const updateUserProfile = async (data, updatetype) => {
         }
     } else {
         console.error("Session cookie not found");
-        throw new Error("SOMENS UP!");
+        throw new Error("SOMN'S UP B!");
     }
 
 
@@ -62,6 +62,7 @@ export const userProfile = async () => {
 
                 if (!res.ok) {
                     throw new Error(`Error fetching user data: ${res.statusText}`);
+
                 }
 
                 const jsonres = await res.json();

@@ -9,6 +9,10 @@ import {
   CameraIcon,
 } from '@heroicons/react/24/outline'
 import 'react-edit-text/dist/index.css'
+import FileUpload from '../ui/uploadImageModal';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { useRouter } from "next/navigation";
 
 type User = {
   name: string
@@ -34,6 +38,8 @@ type StatCardProps = {
 type AnnotationsFeedProps = {
   annotations: string[]
 }
+
+
 
 // const user: User = {
 //   name: 'Marcus James',
@@ -72,18 +78,24 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user, updateBio }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState(user.bio || "UserBio Placeholder...");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageURL, setImageURL] = useState(user.profile_image);
+  const router = useRouter()
 
   const toggleEditing = () => {
     setIsEditing(!isEditing);
   };
 
   const handleBioUpdate = async () => {
-    await updateBio(bio)
+    await updateBio(bio, "bio")
     toggleEditing()
-    
-
   }
+
+  const handleImageURlReturn = (imageUrl) => {
+    setImageURL(imageUrl)
+    setIsOpen(false)
+  }
+
 
   const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBio(e.target.value);
@@ -101,19 +113,21 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user, updateBio }) => {
   }, [bio]);
 
   return(
+
     <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full shadow-lg h-full relative">
+      <div>
+            {isOpen && (
+              <FileUpload handleImageURlReturn={handleImageURlReturn}/>
+            )}
+        </div>
+   
       <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
-        <img
-          src={user.profile_image || '/default-profile.jpg'}
-          alt="Profile"
-          className="object-cover w-full h-full"
-        />
+       <img src={imageURL ? `/uploads/${imageURL}?t=${new Date().getTime()}` : '/default-profile.jpg'} alt="Profile Image" />
       </div>
       <CameraIcon
         className="absolute bottom-50 left-full transform -translate-x-[120px] translate-y-20 h-8 w-8 text-gray-600 cursor-pointer"
-        onClick={() => alert('Upload new profile picture')}
+        onClick={() => setIsOpen(true)}
       />
-
       <div className="text-center mt-8">
         <h2 className="text-xl font-bold text-black">{user.email || "Unknown User"}</h2>
         <div className="flex flex-col items-center justify-center mt-2 w-full">
@@ -170,6 +184,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ user, updateBio }) => {
         />
       </div>
     </div>
+
     )
 };
 
@@ -197,14 +212,15 @@ const ProfilePage: React.FC<{userdata: User}> = ({userdata, updateBio}) => {
   console.log("annotation_iq", userdata.annotation_iq)
 
   return (
+
     <div className="grid grid-cols-1 sm:grid-cols-12 mt-12 min-h-screen bg-white">
-  <div className="sm:col-span-4">
-    <UserBioCard user={userdata} updateBio={updateBio} />
-  </div>
-  <div className="sm:col-span-8">
-    <AnnotationsFeed annotations={slicedArray} />
-  </div>
-</div>
+      <div className="sm:col-span-4">
+        <UserBioCard user={userdata} updateBio={updateBio} />
+      </div>
+      <div className="sm:col-span-8">
+        <AnnotationsFeed annotations={slicedArray} />
+      </div>
+    </div>
   )
 }
 

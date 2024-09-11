@@ -9,9 +9,9 @@ export default function Page() {
   const [userData, setUserData] = useState(null);
   const router = useRouter();
 
-  const handleBioUpdate = async (bio) => {
-    console.log("bioUpdate", bio)
-    await updateUserProfile(bio, "bio")
+  const handleBioUpdate = async (data, action) => {
+    console.log("bioUpdate", data, action)
+    await updateUserProfile(data, action)
   }
 
 
