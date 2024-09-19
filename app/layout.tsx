@@ -1,7 +1,7 @@
 import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
-import Nav from './frontpage/nav'
+import Navbar from './ui/navbar';
 import Provider from './Provider'
 // import Toast from './toast';
 import { Suspense } from 'react';
@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className="h-full">
       <Provider>
         <Suspense>
-          <Nav />
+          <Navbar />
         </Suspense>
         {children}
         <Analytics />

@@ -12,6 +12,7 @@ import { authOptions } from "./auth/[...nextauth]"
 
 export default function NavBar() {
   const { data: session, status } = useSession();
+
   
 
 
@@ -24,11 +25,11 @@ export default function NavBar() {
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="#link">Link</Nav.Link>
-            {/*<NavDropdown title="Menu" id="basic-nav-dropdown">
-              {session ? (
+            <NavDropdown title="Menu" id="basic-nav-dropdown">
+              {status ? (
                 <>
                   <NavDropdown.Item href="#">
-                    {session.user.username}
+                    {session?.user?.email}
                   </NavDropdown.Item>
                   <NavDropdown.Item onClick={() => signOut()}>
                     Sign out
@@ -46,7 +47,7 @@ export default function NavBar() {
                   </NavDropdown.Item>
                 </>
               )}
-            </NavDropdown>*/}
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>
