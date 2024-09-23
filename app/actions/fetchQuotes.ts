@@ -1,12 +1,24 @@
 "use server"
+import { cookies } from 'next/headers';
 
 async function getData(url) {
-  console.log("URL>>>>", url)
-  const res = await fetch(url);
+  // console.log("URL>>>>", url)
+  const res = await fetch(url, {
+    method: 'GET',
+    // we'll set the authorization here later to
+    // headers: {
+    //   "Authorization": `Bearer ${sessionCookie.user.bearerToken}`,
+    //   "Content-Type": "application/json",
+    // }
+          
+
+  });
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
+
   }
+
 
   return res.json();
 }

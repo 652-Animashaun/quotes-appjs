@@ -19,7 +19,7 @@ export default function Register() {
     console.log(data);
     // Handle registration logic here, then redirect to another page
     const user = await createUser(data)
-    router.push(signIn());
+    router.push('/login');
   };
 
   return (

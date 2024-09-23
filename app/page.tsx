@@ -7,6 +7,7 @@ import { QuoteListSkeleton } from "@/app/ui/skeletons";
 import InfiniteScrollCmp from './ui/InfiniteScrollWithHeight';
 import { getQuotes } from "./actions/fetchQuotes";
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { getSession } from "next-auth/react"
 
 export default function Page({ searchParams }) {
   const [quotes, setQuotes] = useState([]);
@@ -16,14 +17,18 @@ export default function Page({ searchParams }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+  // const { sessionData: session, status } = getSession()
+  // console.log("LOADPAGESESSION", session)
+
 
   useEffect(() => {
     const fetchInitialQuotes = async () => {
       setLoading(true);
       try {
-        const data = await getQuotes(query, currentPage);
-        setQuotes(data.quotes);
-        setHasMore(data.links.next != null);
+        const response = await getQuotes(query, currentPage);
+        setQuotes(response.quotes);
+        console.log("QUOTES", response.quotes)
+        setHasMore(response.links.next != null);
       } catch (error) {
         console.error("Error fetching initial quotes:", error);
       } finally {
@@ -34,14 +39,18 @@ export default function Page({ searchParams }) {
     fetchInitialQuotes();
   }, [query, currentPage]);
 
+  useEffect(() => {
+      console.log("Loading state changed:", loading);
+    }, [loading]);
+
   const fetchQuotes = async (direction: 'next' | 'prev') => {
     try {
       const nextPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
       console.log("direction: ", nextPage)
-      const data = await getQuotes(query, nextPage);
-      setQuotes((prevQuotes) => direction === 'next' ? [...prevQuotes, ...data.quotes] : [...data.quotes, ...prevQuotes]);
+      const response = await getQuotes(query, nextPage);
+      setQuotes((prevQuotes) => direction === 'next' ? [...prevQuotes, ...response.quotes] : [...response.quotes, ...prevQuotes]);
       setCurrentPage(nextPage);
-      setHasMore(data.links.next != null);
+      setHasMore(response.links.next != null);
       router.replace(`${pathname}?q=${query}&page=${nextPage}`);
     } catch (error) {
       console.error(`Error fetching ${direction} quotes:`, error);
@@ -63,3 +72,11 @@ export default function Page({ searchParams }) {
     </main>
   );
 }
+
+
+
+
+
+
+
+  

@@ -1,6 +1,8 @@
 // pages/api/auth/[...nextauth].ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import {setSessionCookie} from "../../../lib/session";
+
 
 export const authOptions = {
   providers: [
@@ -17,12 +19,12 @@ export const authOptions = {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username: credentials?.username,
+            username: credentials?.email,
             password: credentials?.password,
           }),
+
         });
         const user = await res.json();
-
         if (res.ok && user) {
           return user;
         } else {
@@ -31,19 +33,29 @@ export const authOptions = {
       },
     }),
   ],
+  pages: {
+    // signIn: '/login', // Custom sign-in page
+  },
+  session: {
+    strategy: 'jwt',
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.email = user.email;
+        token.id = user.user.id;
+        token.email = user.user.email;
+        token.bearerToken = user.token
       }
       return token;
     },
     async session({ session, token }) {
       session.user = token;
+      console.log("ASYNC SESSION")
+      await setSessionCookie(session)
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET
 };
 const handler = NextAuth(authOptions);
 
