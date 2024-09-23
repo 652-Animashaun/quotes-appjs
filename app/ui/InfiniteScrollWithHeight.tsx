@@ -13,6 +13,7 @@ const InfiniteScrollCmp: React.FC<InfiniteScrollCmpProps> = ({
   fetchQuotes,
   hasMore = true,
 }) => {
+  console.log(quotes)
   return (
     <InfiniteScroll
       dataLength={quotes.length}

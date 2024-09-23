@@ -18,7 +18,6 @@ export default function FileUpload({handleImageURlReturn}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log()
 
     const formData = new FormData();
     formData.append('file', file);

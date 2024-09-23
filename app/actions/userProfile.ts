@@ -43,7 +43,7 @@ export const updateUserProfile = async (data, action) => {
 
 }
 
-export const userProfile = async () => {
+export const userProfile = async (moreUrl) => {
     console.log("called actions/userProfile");
     const sessionCookie = getCookies()
     try {
@@ -51,7 +51,7 @@ export const userProfile = async () => {
             const parsedSession = JSON.parse(sessionCookie);
             if (parsedSession && parsedSession.user && parsedSession.user.bearerToken) {
 
-                const res = await fetch(`${url}/user`, {
+                const res = await fetch(moreUrl, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${parsedSession.user.bearerToken}`,
@@ -80,4 +80,12 @@ export const userProfile = async () => {
         throw error;
     }
 };
+
+
+
+export const getMoreUserQuotes = async (query = '', currentPage = 1) => {
+  const moreUrl = `http://127.0.0.1:5000/user?q=${query}&page=${currentPage}`;
+  return userProfile(moreUrl);
+};
+
 export default userProfile;

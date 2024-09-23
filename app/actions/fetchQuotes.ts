@@ -19,6 +19,7 @@ async function getData(url) {
 
   }
 
+
   return res.json();
 }
 
