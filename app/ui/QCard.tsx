@@ -12,6 +12,8 @@ import {
   HeartIcon,
 } from "@heroicons/react/24/outline";
 
+import { Annotate } from "../actions/annotate";
+
 const QCard = ({ quote }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isCommentSectionVisible, setIsCommentSectionVisible] = useState(false);
@@ -38,6 +40,7 @@ const QCard = ({ quote }) => {
       setAnnotation(newAnnotation);
       setNewAnnotation('');
       setIsContributing(false);
+      Annotate(newAnnotation)
     }
   };
 
