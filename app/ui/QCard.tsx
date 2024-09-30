@@ -85,7 +85,7 @@ const QCard = ({ quote }) => {
       </div>
 
       {isVisible && (
-        <div className="mt-4 p-5 border bg-gradient-to-r from-gray-200 to-gray-500 rounded-3xl w-full md:w-5/6 ml-0 md:ml-14">
+        <div className="mt-4 p-5 bg-gradient-to-r from-gray-200 to-gray-500 rounded-3xl w-full md:w-5/6 ml-0 md:ml-14">
           {annotation ? (
             <>
               <h2 className="text-gray-600 font-bold text-sm md:text-lg">{quote.annotation?.annotated_quote_contrib}</h2>
