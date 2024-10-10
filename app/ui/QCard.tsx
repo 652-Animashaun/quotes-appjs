@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { Annotate } from "../actions/annotate";
+import { useSession } from "next-auth/react";
 
 const QCard = ({ quote }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,10 +23,14 @@ const QCard = ({ quote }) => {
   const [annotation, setAnnotation] = useState(quote.annotation?.annotation || '');
   const [newAnnotation, setNewAnnotation] = useState('');
   const [isContributing, setIsContributing] = useState(false);
+  const { data: session, status } = useSession();
+
 
   const handleToggle = () => {
     setIsVisible(!isVisible);
   };
+
+  console.log("session", session)
 
   const toggleCommentSection = () => {
     setIsCommentSectionVisible(!isCommentSectionVisible);
@@ -39,8 +44,13 @@ const QCard = ({ quote }) => {
     if (newAnnotation.trim() !== '') {
       setAnnotation(newAnnotation);
       setNewAnnotation('');
+      const annotationData = {
+        annotator: session?.user?.id,
+        annotated: quote.id,
+        annotation: newAnnotation, 
+      };
       setIsContributing(false);
-      Annotate(newAnnotation)
+      Annotate(annotationData);
     }
   };
 
@@ -91,8 +101,12 @@ const QCard = ({ quote }) => {
         <div className="mt-4 p-5 bg-gradient-to-r from-gray-200 to-gray-500 rounded-3xl w-full md:w-5/6 ml-0 md:ml-14">
           {annotation ? (
             <>
-              <h2 className="text-gray-600 font-bold text-sm md:text-lg">{quote.annotation?.annotated_quote_contrib}</h2>
-              <span className="block mb-2 mt-3 text-sm md:text-xl text-black-500 font-bold">{annotation}</span>
+              <h2 className="text-gray-600 font-bold text-sm md:text-lg">
+                {quote.annotation?.annotated_quote_contrib}
+              </h2>
+              <span className="block mb-2 mt-3 text-sm md:text-xl text-black-500 font-bold">
+                {annotation}
+              </span>
               <p className="font-bold mt-4 text-gray-600 text-xs md:text-sm">
                 {quote.annotation?.annotated_quote_timestamp} @{quote.annotation?.annotator}
               </p>
@@ -114,13 +128,17 @@ const QCard = ({ quote }) => {
               </button>
             </div>
           ) : (
-            <button
-              className="mt-2 px-4 py-1 bg-gray-800 text-white rounded-2xl hover:bg-gray-900"
-              onClick={() => setIsContributing(true)}
-            >
-              Contribute
-            </button>
+            <>
+              <p className="text-sm text-gray-800 mb-2">Want to contribute? Write an annotation to the quote.</p>
+              <button
+                className="mt-2 px-4 py-1 bg-gray-800 text-white rounded-2xl hover:bg-gray-900"
+                onClick={() => setIsContributing(true)}
+              >
+                Contribute
+              </button>
+            </>
           )}
+
 
           <div className="mt-4 flex space-x-4">
             <button className="flex items-center font-bold space-x-1 text-black-600 hover:text-black-900">

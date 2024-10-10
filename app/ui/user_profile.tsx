@@ -69,7 +69,7 @@ type AnnotationsFeedProps = {
 const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
   return (
     <div
-      className={`flex flex-col items-center p-4 rounded-lg bg-transparent shadow-lg w-25 border-4 ${color}`}
+      className={`flex flex-col items-center p-4 rounded-lg bg-gradient-to-r from-gray-500 to-gray-400 shadow-lg w-25 ${color} hover:from-gray-600 hover:to-gray-500`}
     >
       {icon}
       <span className={`font-bold ${color} text-2xl`}>{value}</span>
@@ -119,7 +119,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ userdata, updateBio }) => {
 
   return(
 
-    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full shadow-lg h-full relative">
+    <div className="flex flex-col ml-7 mt-3 items-center border p-6 rounded-2xl bg-gradient-to-r from-gray-300 to-gray-100 w-full shadow-lg h-1/6 relative">
       <div>
             {isOpen && (
               <FileUpload handleImageURlReturn={handleImageURlReturn}/>
@@ -130,7 +130,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ userdata, updateBio }) => {
        <img src={imageURL ? `/uploads/${imageURL}?t=${new Date().getTime()}` : '/default-profile.jpg'} alt="Profile Image" />
       </div>
       <CameraIcon
-        className="absolute bottom-50 left-full transform -translate-x-[120px] translate-y-20 h-8 w-8 text-gray-600 cursor-pointer"
+        className="absolute bottom-50 left-full transform -translate-x-[170px] translate-y-20 h-8 w-8 text-blue-900 cursor-pointer"
         onClick={() => setIsOpen(true)}
       />
       <div className="text-center mt-8">
@@ -155,7 +155,7 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ userdata, updateBio }) => {
             <p className="whitespace-pre-wrap w-full">{bio}</p>
           )}
           <button
-            className="mt-2 px-4 py-1 border border-gray-400 rounded-full text-blue-700 bg-transparent hover:bg-blue-100 transition duration-150"
+            className="mt-2 px-4 py-1 border rounded-full text-white bg-gradient-to-r from-gray-500 to-gray-300 hover:from-gray-600 hover:to-gray-400 transition duration-150"
             onClick={isEditing ? handleBioUpdate : toggleEditing}
           >
             {isEditing ? "Save Bio" : "Edit Bio"}
@@ -166,26 +166,26 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ userdata, updateBio }) => {
         <StatCard
           value={user.followers}
           label="Followers"
-          color="text-blue-500"
-          icon={<UserIcon className="h-6 w-6 text-blue-500" />}
+          color="text-yellow-400"
+          icon={<UserIcon className="h-8 w-6 text-yellow" />}
         />
         <StatCard
           value={userdata.annotations_count}
           label="Annotations"
-          color="text-green-500"
-          icon={<PencilSquareIcon className="h-6 w-6 text-green-500" />}
+          color="text-red-700"
+          icon={<PencilSquareIcon className="h-6 w-6 text-red" />}
         />
         <StatCard
           value={user.contributions}
           label="Contributions"
-          color="text-red-500"
-          icon={<GiftIcon className="h-6 w-6 text-red-500" />}
+          color="text-purple-800"
+          icon={<GiftIcon className="h-6 w-6 text-purple" />}
         />
         <StatCard
           value={user.quotesIQ}
           label="QuotesIQ"
-          color="text-purple-500"
-          icon={<StarIcon className="h-6 w-6 text-purple-500" />}
+          color="text-orange-500"
+          icon={<StarIcon className="h-6 w-6 text-orange" />}
         />
       </div>
     </div>
