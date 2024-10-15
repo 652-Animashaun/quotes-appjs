@@ -33,7 +33,7 @@ export default function Search({ disabled }: { disabled?: boolean }) {
 
 
   return (
-    <div className="relative mt-5 max-w-md">
+    <div className="relative mt-3 max-w-[80%] sm:max-w-md md:max-w-lg mx-auto">
       <label htmlFor="search" className="sr-only">
         Search
       </label>

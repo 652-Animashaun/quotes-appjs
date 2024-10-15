@@ -76,7 +76,7 @@ const QCard = ({ quote }) => {
   return (
     <div
       key={quote.id}
-      className="relative border-b-2 border-blue-700 py-3 rounded-lg w-full md:w-5/6 ml-0 md:ml-12" // Full width on mobile, smaller on larger screens
+      className="relative border-b-2  border-blue-700 py-3 px-3 rounded-lg w-full md:w-5/6 ml-0 md:ml-12" // Full width on mobile, smaller on larger screens
     >
       <div className="relative" onClick={handleToggle}>
         <div className="group relative p-4 bg-gray-200 rounded-3xl cursor-pointer transition duration-150 hover:bg-gradient-to-r from-gray-200 to-gray-400">
