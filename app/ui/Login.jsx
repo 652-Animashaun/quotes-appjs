@@ -22,7 +22,7 @@ export default function Login() {
   };
   return (
     <div className={styles.formContainer}>
-      <h2>Login</h2>
+      <h2 className='font-bold'>Login</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input className={styles.input} { ...register('email', { required: 'Email is required' })} placeholder="Email" />
           {errors.email && <span>{errors.email.message}</span>}

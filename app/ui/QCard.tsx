@@ -11,6 +11,8 @@ import {
   ChatBubbleLeftIcon,
   HeartIcon,
 } from "@heroicons/react/24/outline";
+import { UserCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+
 
 import { Annotate } from "../actions/annotate";
 import { useSession } from "next-auth/react";
@@ -76,39 +78,39 @@ const QCard = ({ quote }) => {
   return (
     <div
       key={quote.id}
-      className="relative border-b-2  border-blue-700 py-3 px-3 rounded-lg w-full md:w-5/6 ml-0 md:ml-12" // Full width on mobile, smaller on larger screens
+      className="relative border-b-2  border-gray-400 py-3 px-3 rounded-lg w-full md:w-5/6 ml-0 md:ml-12" // Full width on mobile, smaller on larger screens
     >
       <div className="relative" onClick={handleToggle}>
-        <div className="group relative p-4 bg-gray-200 rounded-3xl cursor-pointer transition duration-150 hover:bg-gradient-to-r from-gray-200 to-gray-400">
+        <div className="group relative p-4 bg-gray-50 rounded-3xl cursor-pointer transition duration-150 hover:bg-gradient-to-r from-gray-200 to-gray-100">
           <div className="flex items-center space-x-2 group-hover:text-gray-900">
-            <span className="block w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+            <span className="block w-8 h-8 bg-gray-200 rounded-full overflow-hidden">
               <img src={quote.image} alt="" className="w-full h-full object-cover" />
             </span>
-            <h2 className="font-bold text-sm md:text-lg">{quote.artist}</h2> {/* Adjust font size for smaller screens */}
+            <h2 className="font-bold text-xs md:text-xs lg:text-sm text-black">{quote.artist}</h2> {/* Adjust font size for smaller screens */}
           </div>
 
-          <p className="text-sm md:text-xl text-black group-hover:text-gray-900 transition duration-150 p-2 rounded-lg font-bold">
+          <p className="text-sm md:text-xl text-black group-hover:text-gray-900 transition duration-150 p-2 rounded-lg font-san">
             {quote.quote}
           </p>
 
-          <h5 className="absolute bottom-2 right-2 text-xs md:text-sm text-gray-600 group-hover:text-gray-900 font-bold">
+          <h5 className="absolute bottom-2 right-2 text-xs md:text-sm text-black group-hover:text-white font-san">
             - {quote.song}
           </h5>
         </div>
       </div>
 
       {isVisible && (
-        <div className="mt-4 p-5 bg-gradient-to-r from-gray-200 to-gray-500 rounded-3xl w-full md:w-5/6 ml-0 md:ml-14">
+        <div className="mt-4 p-5bg-white rounded-3xl w-full md:w-5/6 ml-0 md:ml-14">
           {annotation ? (
             <>
-              <h2 className="text-gray-600 font-bold text-sm md:text-lg">
-                {quote.annotation?.annotated_quote_contrib}
+              <h2 className="text-gray-800 font-bold text-sm md:text-lg">
+                {quote.annotation?.annotated_quote_contrib} <span className="font-mono text-gray-700 text-xs md:text-sm">@{quote.annotation?.annotator}</span>
               </h2>
-              <span className="block mb-2 mt-3 text-sm md:text-xl text-black-500 font-bold">
+              <span className="block mb-2 mt-3 text-xs md:text-sm text-black font-san">
                 {annotation}
               </span>
-              <p className="font-bold mt-4 text-gray-600 text-xs md:text-sm">
-                {quote.annotation?.annotated_quote_timestamp} @{quote.annotation?.annotator}
+              <p className="font-5 mt-4 text-gray-900 text-xs md:text-sm">
+                {quote.annotation?.annotated_quote_timestamp} 
               </p>
             </>
           ) : isContributing ? (
@@ -141,18 +143,18 @@ const QCard = ({ quote }) => {
 
 
           <div className="mt-4 flex space-x-4">
-            <button className="flex items-center font-bold space-x-1 text-black-600 hover:text-black-900">
+            <button className="flex items-center font-bold space-x-1 text-gray-700 hover:text-black-900">
               <EyeIcon className="w-5 md:w-7 h-5 md:h-7" />
               <span className="text-xs md:text-sm">{quote.annotation?.annotation_view_count}</span>
             </button>
             <button
-              className="flex items-center font-bold space-x-1 text-yellow-400 hover:text-yellow-900"
+              className="flex items-center font-bold space-x-1 text-gray-700 hover:text-yellow-900"
               onClick={toggleCommentSection}
             >
               <ChatBubbleLeftIcon className="w-5 md:w-7 h-5 md:h-7" />
               <span className="text-xs md:text-sm">{quote.annotation?.annotated_comments}</span>
             </button>
-            <button className="flex items-center font-bold space-x-1 text-red-600 hover:text-red-900">
+            <button className="flex items-center font-bold space-x-1 text-gray-700 hover:text-red-900">
               <HeartIcon className="w-5 md:w-7 h-5 md:h-7" />
               <span className="text-xs md:text-sm">{quote.annotation?.upvotes}</span>
             </button>
@@ -167,7 +169,7 @@ const QCard = ({ quote }) => {
                     {comments.map((comment, idx) => (
                       <li
                         key={idx}
-                        className="flex items-center mt-4 p-3 bg-gradient-to-r from-gray-200 to-gray-400 rounded-2xl border border-gray-300"
+                        className="flex items-center mt-4 p-3 bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl border-gray-300"
                       >
                         <span className="block w-6 md:w-8 h-6 md:h-8 bg-pink-500 rounded-full overflow-hidden mr-2">
                           <img src="/path-to-user-avatar.jpg" alt="User Avatar" className="w-full h-full object-cover" />
@@ -179,7 +181,7 @@ const QCard = ({ quote }) => {
                         </div>
 
                         <button
-                          className={`flex items-center ${comment.liked ? 'text-yellow-600' : 'text-red-700'} transition-colors duration-150`}
+                          className={`flex items-center ${comment.liked ? 'text-yellow-600' : 'text-gray-700'} transition-colors duration-150`}
                           onClick={() => toggleLikeComment(idx)}
                         >
                           <HeartIcon className="w-5 h-5" />

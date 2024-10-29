@@ -2,63 +2,48 @@
 
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 import { useSession } from "next-auth/react";
-import { UserCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-import { useState } from 'react'; // For toggling search bar and dropdown
+import { UserCircleIcon, MagnifyingGlassIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
 
 export default function NavBar() {
-  const { data: session } = useSession();
-  const [showSearch, setShowSearch] = useState(false); // State to toggle search bar visibility
-  const [showDropdown, setShowDropdown] = useState(false); // State to toggle dropdown visibility
-  const [isNavOpen, setIsNavOpen] = useState(false); // State to toggle hamburger dropdown visibility
+  const { data: session, status } = useSession();
+  const [showSearch, setShowSearch] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Function to toggle dropdown when user icon is clicked
   const toggleDropdown = () => setShowDropdown(!showDropdown);
-  
-  // Function to toggle hamburger menu
-  const toggleNav = () => setIsNavOpen(!isNavOpen);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <Navbar bg="gradient-to-r from-gray-200 to-gray-400" expand="lg" className="relative h-20">
-      <Container className="flex justify-between items-center relative">
+    <Navbar expand="lg" className="relative border-3 h-20 bg-transparent">
+      <Container className="flex justify-between items-center px-4 py-4 lg:px-8 lg:py-0 min-h-[5rem]">
+        
+        {/* Brand */}
+        <Navbar.Brand 
+          href="#" 
+          className="text-2xl lg:text-3xl text-gray-800 font-bold absolute lg:relative left-4 lg:left-auto lg:mx-auto lg:text-center"
+        >
+          MyApp
+        </Navbar.Brand>
 
-        {/* Centered Brand */}
-        <div className="text-center mx-auto">
-          <Navbar.Brand href="#" className="text-3xl text-red-500 font-bold">
-            MyApp
-          </Navbar.Brand>
-        </div>
-
-        {/* Hamburger Menu for Mobile */}
-        <div className="lg:hidden flex items-center">
-          <button 
-            className="navbar-toggler border-0 focus:outline-none" 
-            onClick={toggleNav}
-          >
-            <div className="space-y-1">
-              <div className="w-8 h-1 bg-black"></div>
-              <div className="w-8 h-1 bg-black"></div>
-              <div className="w-8 h-1 bg-black"></div>
-            </div>
-          </button>
-        </div>
-
-        {/* Right-Aligned Links */}
-        <div className="hidden lg:flex ml-auto mr-10 mt-5 space-x-4 relative">
+        {/* Desktop Navigation */}
+        <Navbar.Collapse id="basic-navbar-nav" className="hidden lg:flex flex-grow mt-3 lg:flex-grow-0 flex justify-end items-center space-x-4">
           <Nav className="flex items-center space-x-4">
 
             {/* Profile Icon Dropdown */}
             <div className="relative text-sm font-bold">
-              <div onClick={toggleDropdown} className="cursor-pointer flex items-center">
-                <UserCircleIcon className="h-8 w-8 text-blue-700" /> {/* Profile icon */}
+              <div onClick={toggleDropdown} className="cursor-pointer">
+                <UserCircleIcon className="h-8 w-8 text-blue-600" />
               </div>
 
               {/* Dropdown Menu */}
               {showDropdown && (
-                <div className="absolute right-0 mt-2 border-2 border-blue-500 bg-gradient-to-r from-gray-200 to-gray-400 rounded-2xl shadow-md p-2 z-50">
+                <div className="absolute right-0 mt-2 border-2 border-gray-500 bg-gradient-to-r from-gray-100 to-gray-50 rounded-2xl shadow-md p-5 z-50">
                   {!session ? (
                     <>
-                      <Nav.Link href="/">Home</Nav.Link>
+                      <Nav.Link href="/" className='ml-3'>Home</Nav.Link>
                       <Nav.Link href="#link">Link</Nav.Link>
                       <div className="block px-2 py-2 cursor-pointer" onClick={() => signIn()}>
                         Sign in
@@ -80,45 +65,75 @@ export default function NavBar() {
 
             {/* Search Icon */}
             <Nav.Link href="#search" onClick={() => setShowSearch(!showSearch)}>
-              <MagnifyingGlassIcon className="h-8 w-8 text-blue-700 cursor-pointer" /> {/* Search Icon */}
+              <MagnifyingGlassIcon className="h-8 w-8 text-blue-600 cursor-pointer" />
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+
+        {/* Hamburger Icon for Mobile - Positioned on the Far Right */}
+        <div className="lg:hidden absolute right-4 cursor-pointer" onClick={toggleMobileMenu}>
+          {isMobileMenuOpen ? (
+            <XMarkIcon className="h-8 w-8 text-red-600" />
+          ) : (
+            <Bars3Icon className="h-8 w-8 text-blue-800" />
+          )}
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="absolute top-full left-0 w-full bg-black shadow-lg flex flex-col items-start py-4 z-50 lg:hidden">
+            <Nav.Link href="#search" onClick={() => setShowSearch(!showSearch)} className="mb-3 flex items-center w-full px-4">
+              <MagnifyingGlassIcon className="h-8 w-8 text-white" />
+              <span className="ml-2 text-white">Search</span> {/* Optional: Add label for clarity */}
             </Nav.Link>
 
-            {/* Search Input Field (Toggles based on search icon click) */}
-            {showSearch && (
-              <div className="relative ml-4">
-                <input
-                  type="text"
-                  placeholder="SEARCH"
-                  className="pl-10 pr-4 py-2 w-64 text-black bg-white rounded-full border-0 
-                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                             border-transparent transition-all duration-300"
-                  style={{
-                    borderImage: 'linear-gradient(to right, #00f2ea, #003cff) 1',
-                  }}
-                />
-                <MagnifyingGlassIcon className="absolute left-3 top-2 h-6 w-6 text-blue-600" />
+            <div onClick={toggleDropdown} className="cursor-pointer mb-3 flex items-center w-full px-4">
+              <UserCircleIcon className="h-8 w-8 text-white" />
+              <span className="ml-2 text-white">Profile</span> {/* Optional: Add label for clarity */}
+            </div>
+
+            {showDropdown && (
+              <div className="bg-black text-white rounded-lg border-2 border-gray-500 shadow-md p-4 w-full px-4">
+                {!session ? (
+                  <>
+                    <Nav.Link href="/" className='ml-3'>Home</Nav.Link>
+                    <Nav.Link href="#link">Link</Nav.Link>
+                    <div className="block px-2 py-2 cursor-pointer" onClick={() => signIn()}>
+                      Sign in
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Nav.Link href="/" className='ml-3'>Home</Nav.Link>
+                    <Nav.Link href="#link">Link</Nav.Link>
+                    <div className="block px-3 py-2">{session.user?.email}</div>
+                    <div className="block px-3 py-2 cursor-pointer" onClick={() => signOut()}>
+                      Sign out
+                    </div>
+                  </>
+                )}
               </div>
             )}
+          </div>
+        )}
 
-          </Nav>
-        </div>
+        {/* Search Input - Rendered in a visible area */}
+        {showSearch && (
+          <div className="fixed top-16 right-4 w-full max-w-sm bg-white rounded-full shadow-md z-50 lg:w-64">
+            <input
+              type="text"
+              placeholder="SEARCH"
+              className="pl-10 pr-4 py-2 w-full text-black bg-white rounded-full border-0 
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                         transition-all duration-300"
+              style={{
+                borderImage: 'linear-gradient(to right, #00f2ea, #003cff) 1',
+              }}
+            />
+            <MagnifyingGlassIcon className="absolute left-3 top-2 h-6 w-6 text-blue-600" />
+          </div>
+        )}
       </Container>
-
-      {/* Dropdown Menu for Mobile */}
-      {isNavOpen && (
-        <div className="lg:hidden absolute top-20 left-0 right-0 bg-gradient-to-r from-gray-200 to-gray-400 shadow-md p-4 z-50">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="#link">Link</Nav.Link>
-          <div className="block px-2 py-2 cursor-pointer" onClick={() => signIn()}>
-            Sign in
-          </div>
-          <div className="text-right mt-2">
-            <button onClick={toggleNav} className="text-gray-500 hover:text-red-500">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </Navbar>
   );
 }
