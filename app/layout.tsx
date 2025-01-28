@@ -7,6 +7,8 @@ import Provider from './Provider'
 import { Suspense } from 'react';
 
 
+
+
 export const metadata = {
   title: 'Afroquotes',
   description:

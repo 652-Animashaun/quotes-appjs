@@ -18,6 +18,7 @@ import Button from 'react-bootstrap/Button';
 import { useRouter } from "next/navigation";
 import InfiniteScrollCmp from './InfiniteScrollWithHeight';
 
+
 type User = {
   name: string
   bio: string
@@ -69,8 +70,11 @@ type AnnotationsFeedProps = {
 const StatCard: React.FC<StatCardProps> = ({ value, label, color, icon }) => {
   return (
     <div
-      className={`flex flex-col items-center p-4 rounded-lg bg-transparent shadow-lg w-25 border-4 ${color}`}
-    >
+  className={`flex flex-col items-center border-3 p-4 rounded-lg bg-white w-25 ${color} hover:from-gray-600 hover:to-gray-900`}
+  style={{
+    boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.5)', // Custom shadow
+  }}
+>
       {icon}
       <span className={`font-bold ${color} text-2xl`}>{value}</span>
       <p className={`text-sm ${color}`}>{label}</p>
@@ -119,22 +123,30 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ userdata, updateBio }) => {
 
   return(
 
-    <div className="flex flex-col items-center border-4 p-6 rounded-lg bg-purple w-full shadow-lg h-full relative">
+    <div className="flex flex-col ml-0 items-center p-6 sm:p-6 sm:rounded-2xl bg-white w-full shadow-lg relative sm:pl-6 pl-0 pr-4 sm:pr-6 -mt-10 sm:mt-0">
+
       <div>
-            {isOpen && (
-              <FileUpload handleImageURlReturn={handleImageURlReturn}/>
-            )}
-        </div>
-   
-      <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-900">
-       <img src={imageURL ? `/uploads/${imageURL}?t=${new Date().getTime()}` : '/default-profile.jpg'} alt="Profile Image" />
+        {isOpen && (
+          <FileUpload handleImageURlReturn={handleImageURlReturn} />
+        )}
       </div>
-      <CameraIcon
-        className="absolute bottom-50 left-full transform -translate-x-[120px] translate-y-20 h-8 w-8 text-gray-600 cursor-pointer"
-        onClick={() => setIsOpen(true)}
-      />
-      <div className="text-center mt-8">
-        <h2 className="text-xl font-bold text-black">{user.email || "Unknown User"}</h2>
+
+      <div className="relative">
+        <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-blue-700 shadow-lg">
+          <img
+            src={imageURL ? `/uploads/${imageURL}?t=${new Date().getTime()}` : '/default-profile.jpg'}
+            alt="Profile Image"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <CameraIcon
+          className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2 h-8 w-8 text-blue-700 cursor-pointer"
+          onClick={() => setIsOpen(true)}
+        />
+      </div>
+
+      <div className="text-center mt-8 w-full">
+        <h2 className="text-xl font-bold text-gray-800">{user.email || "Unknown User"}</h2>
         <div className="flex flex-col items-center justify-center mt-2 w-full">
           {isEditing ? (
             <div className="w-full">
@@ -155,40 +167,42 @@ const UserBioCard: React.FC<UserBioCardProps> = ({ userdata, updateBio }) => {
             <p className="whitespace-pre-wrap w-full">{bio}</p>
           )}
           <button
-            className="mt-2 px-4 py-1 border border-gray-400 rounded-full text-blue-700 bg-transparent hover:bg-blue-100 transition duration-150"
+            className="mt-2 px-4 py-1 border-2 rounded-full text-white bg-blue-800 hover:from-gray-600 hover:to-gray-400 transition duration-150"
             onClick={isEditing ? handleBioUpdate : toggleEditing}
           >
             {isEditing ? "Save Bio" : "Edit Bio"}
           </button>
         </div>
       </div>
+
       <div className="grid grid-cols-2 gap-4 mt-4">
         <StatCard
           value={user.followers}
           label="Followers"
-          color="text-blue-500"
-          icon={<UserIcon className="h-6 w-6 text-blue-500" />}
+          color="text-black"
+          icon={<UserIcon className="h-8 w-6 text-yellow-400" />}
         />
         <StatCard
           value={userdata.annotations_count}
           label="Annotations"
-          color="text-green-500"
-          icon={<PencilSquareIcon className="h-6 w-6 text-green-500" />}
+          color="text-black"
+          icon={<PencilSquareIcon className="h-6 w-6 text-red-700" />}
         />
         <StatCard
           value={user.contributions}
           label="Contributions"
-          color="text-red-500"
-          icon={<GiftIcon className="h-6 w-6 text-red-500" />}
+          color="text-black"
+          icon={<GiftIcon className="h-6 w-6 text-purple-700" />}
         />
         <StatCard
           value={user.quotesIQ}
           label="QuotesIQ"
-          color="text-purple-500"
-          icon={<StarIcon className="h-6 w-6 text-purple-500" />}
+          color="text-black"
+          icon={<StarIcon className="h-6 w-6 text-orange-700" />}
         />
       </div>
     </div>
+
 
     )
 };
@@ -206,7 +220,7 @@ const ProfilePage: React.FC<{userdata: User}> = ({userdata, updateBio, hasMore, 
 
   return (
 
-    <div className="grid grid-cols-1 sm:grid-cols-12 mt-12 min-h-screen bg-white">
+    <div className="grid grid-cols-1 sm:grid-cols-12 mt-12 min-h-screen bg-white sm:pl-6">
       <div className="sm:col-span-4">
         <UserBioCard userdata={userdata} updateBio={updateBio} />
       </div>
@@ -218,6 +232,7 @@ const ProfilePage: React.FC<{userdata: User}> = ({userdata, updateBio, hasMore, 
         />
       </div>
     </div>
+
   )
 }
 
