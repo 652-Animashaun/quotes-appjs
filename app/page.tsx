@@ -27,6 +27,7 @@ export default function Page({ searchParams }) {
       try {
         const response = await getQuotes(query, currentPage);
         setQuotes(response.quotes);
+        console.log("QUOTES", response.quotes)
         setHasMore(response.links.next != null);
       } catch (error) {
         console.error("Error fetching initial quotes:", error);
@@ -37,6 +38,10 @@ export default function Page({ searchParams }) {
 
     fetchInitialQuotes();
   }, [query, currentPage]);
+
+  useEffect(() => {
+      console.log("Loading state changed:", loading);
+    }, [loading]);
 
   const fetchQuotes = async (direction: 'next' | 'prev') => {
     try {
@@ -67,3 +72,11 @@ export default function Page({ searchParams }) {
     </main>
   );
 }
+
+
+
+
+
+
+
+  
