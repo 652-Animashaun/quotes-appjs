@@ -48,7 +48,7 @@ export default function FileUpload({handleImageURlReturn}) {
     <div>
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} />
-        <button type="submit">Upload</button>
+        <button className='border-2 border-gray-600 rounded-full text-white bg-gray-500' type="submit">Upload</button>
       </form>
       {imageUrl && (
         <div>

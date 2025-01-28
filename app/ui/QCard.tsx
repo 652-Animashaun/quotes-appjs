@@ -109,7 +109,7 @@ const QCard = ({ quote }) => {
               <span className="block mb-2 mt-3 text-xs md:text-sm text-black font-san">
                 {annotation}
               </span>
-              <p className="font-5 mt-4 text-gray-900 text-xs md:text-sm">
+              <p className="font-5 mt-4 text-gray-500 text-xs md:text-sm">
                 {quote.annotation?.annotated_quote_timestamp} 
               </p>
             </>
@@ -143,18 +143,18 @@ const QCard = ({ quote }) => {
 
 
           <div className="mt-4 flex space-x-4">
-            <button className="flex items-center font-bold space-x-1 text-gray-700 hover:text-black-900">
+            <button className="flex items-center font-bold space-x-1 text-black hover:text-black-900">
               <EyeIcon className="w-5 md:w-7 h-5 md:h-7" />
               <span className="text-xs md:text-sm">{quote.annotation?.annotation_view_count}</span>
             </button>
             <button
-              className="flex items-center font-bold space-x-1 text-gray-700 hover:text-yellow-900"
+              className="flex items-center font-bold space-x-1 text-yellow-500 hover:text-yellow-900"
               onClick={toggleCommentSection}
             >
               <ChatBubbleLeftIcon className="w-5 md:w-7 h-5 md:h-7" />
               <span className="text-xs md:text-sm">{quote.annotation?.annotated_comments}</span>
             </button>
-            <button className="flex items-center font-bold space-x-1 text-gray-700 hover:text-red-900">
+            <button className="flex items-center font-bold space-x-1 text-red-500 hover:text-red-900">
               <HeartIcon className="w-5 md:w-7 h-5 md:h-7" />
               <span className="text-xs md:text-sm">{quote.annotation?.upvotes}</span>
             </button>

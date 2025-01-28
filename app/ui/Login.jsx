@@ -22,7 +22,8 @@ export default function Login() {
   };
   return (
     <div className={styles.formContainer}>
-      <h2 className='font-bold'>Login</h2>
+      <h1 className='font-san text-base md:text-lg lg:text-2xl text-gray-500'>Welcome back</h1>
+      <h2 className='font-bold mt-3 text-base md:text-lg lg:text-xl'>Enter your credentials to log in</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input className={styles.input} { ...register('email', { required: 'Email is required' })} placeholder="Email" />
           {errors.email && <span>{errors.email.message}</span>}

@@ -25,7 +25,7 @@ export default function NavBar() {
           href="#" 
           className="text-2xl lg:text-3xl text-gray-800 font-bold absolute lg:relative left-4 lg:left-auto lg:mx-auto lg:text-center"
         >
-          MyApp
+          Afroquotes
         </Navbar.Brand>
 
         {/* Desktop Navigation */}
@@ -75,7 +75,7 @@ export default function NavBar() {
           {isMobileMenuOpen ? (
             <XMarkIcon className="h-8 w-8 text-red-600" />
           ) : (
-            <Bars3Icon className="h-8 w-8 text-blue-800" />
+            <Bars3Icon className="h-8 w-8 text-gray-800" />
           )}
         </div>
 
